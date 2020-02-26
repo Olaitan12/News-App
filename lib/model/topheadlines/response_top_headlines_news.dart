@@ -3,12 +3,6 @@ part 'response_top_headlines_news.g.dart';
 
 @JsonSerializable()
 class ResponseTopHeadlinesNews {
-  String status;
-  int totalResults;
-  List<Article> articles;
-  @JsonKey(ignore: true)
-  String error;
-
   ResponseTopHeadlinesNews(this.status, this.totalResults, this.articles);
 
   factory ResponseTopHeadlinesNews.fromJson(Map<String, dynamic> json) =>
@@ -16,54 +10,58 @@ class ResponseTopHeadlinesNews {
 
   ResponseTopHeadlinesNews.withError(this.error);
 
-  Map<String, dynamic> toJson() => _$ResponseTopHeadlinesNewsToJson(this);
+  List<Article> articles;
+  String status;
+  int totalResults;
 
   @override
   String toString() {
     return 'ResponseTopHeadlinesNews{status: $status, totalResults: $totalResults, articles: $articles, error: $error}';
   }
 
+  @JsonKey(ignore: true)
+  String error;
 
+  Map<String, dynamic> toJson() => _$ResponseTopHeadlinesNewsToJson(this);
 }
 
 @JsonSerializable()
 class Article {
-  Source source;
-  String author;
-  String title;
-  String description;
-  String url;
-  String urlToImage;
-  String publishedAt;
-  String content;
-
   Article(this.source, this.author, this.title, this.description, this.url,
       this.urlToImage, this.publishedAt, this.content);
 
   factory Article.fromJson(Map<String, dynamic> json) =>
       _$ArticleFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ArticleToJson(this);
+  String author;
+  String content;
+  String description;
+  String publishedAt;
+  Source source;
+  String title;
+  String url;
+  String urlToImage;
 
   @override
   String toString() {
     return 'Article{source: $source, author: $author, title: $title, description: $description, url: $url, urlToImage: $urlToImage, publishedAt: $publishedAt, content: $content}';
   }
+
+  Map<String, dynamic> toJson() => _$ArticleToJson(this);
 }
 
 @JsonSerializable()
 class Source {
-  String name;
-
   Source(this.name);
 
   factory Source.fromJson(Map<String, dynamic> json) => _$SourceFromJson(json);
 
-  Map<String, dynamic> toJson() => _$SourceToJson(this);
+  String name;
 
   @override
   String toString() {
     return 'Source{name: $name}';
   }
 
+  Map<String, dynamic> toJson() => _$SourceToJson(this);
 }

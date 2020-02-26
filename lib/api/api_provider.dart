@@ -3,6 +3,7 @@ import 'package:sbsc_news_ap/model/topheadlines/response_top_headlines_news.dart
 
 class ApiProvider {
   final Dio _dio = Dio();
+
   final String _baseUrl =
     'http://newsapi.org/v2/top-headlines?country=us&apiKey=3143f9a18adf4979932639722379f0e7';
 

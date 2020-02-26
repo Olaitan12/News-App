@@ -13,54 +13,6 @@ import 'package:url_launcher/url_launcher.dart';
 final GlobalKey<ScaffoldState> scaffoldState = GlobalKey<ScaffoldState>();
 
 class HomeScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var strToday = getStrToday();
-    var mediaQuery = MediaQuery.of(context);
-
-    return Scaffold(
-      key: scaffoldState,
-      body: BlocProvider<HomeBloc>(
-        builder: (context) => HomeBloc(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                color: Color(0xFFF1F5F9),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                ),
-              ),
-              padding: EdgeInsets.only(
-                top: mediaQuery.padding.top + 16.0,
-                bottom: 16.0,
-              ),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      WidgetTitle(strToday),
-                    ],
-                  ),
-                  SizedBox(height: 12.0),
-                  WidgetCategory(),
-                ],
-              ),
-            ),
-            SizedBox(height: 16.0),
-            _buildWidgetLabelLatestNews(context),
-            _buildWidgetSubtitleLatestNews(context),
-            Expanded(
-              child: WidgetLatestNews(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildWidgetSubtitleLatestNews(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -144,12 +96,60 @@ class HomeScreen extends StatelessWidget {
     var strYear = today.split(" ")[2];
     return "$strDay $strMonth $strYear";
   }
+
+  @override
+  Widget build(BuildContext context) {
+    var strToday = getStrToday();
+    var mediaQuery = MediaQuery.of(context);
+
+    return Scaffold(
+      key: scaffoldState,
+      body: BlocProvider<HomeBloc>(
+        builder: (context) => HomeBloc(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              decoration: BoxDecoration(
+                color: Color(0xFFF1F5F9),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                ),
+              ),
+              padding: EdgeInsets.only(
+                top: mediaQuery.padding.top + 16.0,
+                bottom: 16.0,
+              ),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      WidgetTitle(strToday),
+                    ],
+                  ),
+                  SizedBox(height: 12.0),
+                  WidgetCategory(),
+                ],
+              ),
+            ),
+            SizedBox(height: 16.0),
+            _buildWidgetLabelLatestNews(context),
+            _buildWidgetSubtitleLatestNews(context),
+            Expanded(
+              child: WidgetLatestNews(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class WidgetTitle extends StatelessWidget {
-  final String strToday;
-
   WidgetTitle(this.strToday);
+
+  final String strToday;
 
   @override
   Widget build(BuildContext context) {
@@ -191,6 +191,7 @@ class WidgetCategory extends StatefulWidget {
 }
 
 class _WidgetCategoryState extends State<WidgetCategory> {
+  int indexSelectedCategory = 0;
   final listCategories = [
     Category('', 'All'),
     Category('assets/images/business.png', 'Business'),
@@ -200,7 +201,6 @@ class _WidgetCategoryState extends State<WidgetCategory> {
     Category('assets/images/sports.png', 'sports'),
     Category('assets/images/technology.png', 'Technology'),
   ];
-  int indexSelectedCategory = 0;
 
   @override
   void initState() {
@@ -300,35 +300,6 @@ class WidgetLatestNews extends StatefulWidget {
 }
 
 class _WidgetLatestNewsState extends State<WidgetLatestNews> {
-  @override
-  Widget build(BuildContext context) {
-    MediaQueryData mediaQuery = MediaQuery.of(context);
-    final HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 16.0,
-        top: 8.0,
-        right: 16.0,
-        bottom: mediaQuery.padding.bottom + 16.0,
-      ),
-      child: BlocListener<HomeBloc, DataState>(
-        listener: (context, state) {
-          if (state is DataFailed) {
-            Scaffold.of(context).showSnackBar(
-              SnackBar(content: Text(state.errorMessage)),
-            );
-          }
-        },
-        child: BlocBuilder(
-          bloc: homeBloc,
-          builder: (BuildContext context, DataState state) {
-            return _buildWidgetContentLatestNews(state, mediaQuery);
-          },
-        ),
-      ),
-    );
-  }
-
   Widget _buildWidgetContentLatestNews(
       DataState state, MediaQueryData mediaQuery) {
     if (state is DataLoading) {
@@ -545,5 +516,34 @@ class _WidgetLatestNewsState extends State<WidgetLatestNews> {
     } else {
       return Container();
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    MediaQueryData mediaQuery = MediaQuery.of(context);
+    final HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 16.0,
+        top: 8.0,
+        right: 16.0,
+        bottom: mediaQuery.padding.bottom + 16.0,
+      ),
+      child: BlocListener<HomeBloc, DataState>(
+        listener: (context, state) {
+          if (state is DataFailed) {
+            Scaffold.of(context).showSnackBar(
+              SnackBar(content: Text(state.errorMessage)),
+            );
+          }
+        },
+        child: BlocBuilder(
+          bloc: homeBloc,
+          builder: (BuildContext context, DataState state) {
+            return _buildWidgetContentLatestNews(state, mediaQuery);
+          },
+        ),
+      ),
+    );
   }
 }

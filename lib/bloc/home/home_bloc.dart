@@ -9,21 +9,21 @@ class DataInitial extends DataState {}
 class DataLoading extends DataState {}
 
 class DataSuccess extends DataState {
-  final ResponseTopHeadlinesNews data;
-
   DataSuccess(this.data);
+
+  final ResponseTopHeadlinesNews data;
 }
 
 class DataFailed extends DataState {
-  final String errorMessage;
-
   DataFailed(this.errorMessage);
+
+  final String errorMessage;
 }
 
 class DataEvent {
-  final String category;
-
   DataEvent(this.category);
+
+  final String category;
 }
 
 class HomeBloc extends Bloc<DataEvent, DataState> {

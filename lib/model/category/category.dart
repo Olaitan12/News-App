@@ -3,18 +3,17 @@ part 'category.g.dart';
 
 @JsonSerializable()
 class Category {
-  String image;
-  String title;
-
   Category(this.image, this.title);
 
   factory Category.fromJson(Map<String, dynamic> json) => _$CategoryFromJson(json);
 
-  Map<String, dynamic> toJson() => _$CategoryToJson(this);
+  String image;
+  String title;
 
   @override
   String toString() {
     return 'Category{image: $image, title: $title}';
   }
 
+  Map<String, dynamic> toJson() => _$CategoryToJson(this);
 }
